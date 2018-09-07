@@ -170,6 +170,8 @@ public abstract class BaseRequest<T extends BaseResponse> {
 
     public class VolleyRequest extends Request<T> {
 
+        final String TAG = BaseRequest.this.getClass().getSimpleName();
+
         String url;
 
         public VolleyRequest(String url) {
@@ -182,7 +184,7 @@ public abstract class BaseRequest<T extends BaseResponse> {
                     RETRY_BACKOFF));
 
             if (LOGGING) {
-                Log.i(BaseRequest.this.getClass().getSimpleName(),
+                Log.i(TAG,
                         "URL " + getMethodString() + ": " + url);
             }
         }
@@ -194,7 +196,7 @@ public abstract class BaseRequest<T extends BaseResponse> {
                 String json = new String(response.data, Charset.forName("UTF-8"));
 
                 if (LOGGING) {
-                    Log.i(BaseRequest.this.getClass().getSimpleName(),
+                    Log.i(TAG,
                             "JSON: " + json);
                 }
 
@@ -228,7 +230,7 @@ public abstract class BaseRequest<T extends BaseResponse> {
             }
             builder.delete(builder.length() - 2, builder.length());//remove the extra ", "
             if (LOGGING) {
-                Log.i(BaseRequest.this.getClass().getSimpleName(),
+                Log.i(TAG,
                         builder.toString());
             }
             return headers;
@@ -251,7 +253,7 @@ public abstract class BaseRequest<T extends BaseResponse> {
                 builder.delete(builder.length() - 2, builder.length());//remove the extra ", "
             }
             if (LOGGING) {
-                Log.i(BaseRequest.this.getClass().getSimpleName(),
+                Log.i(TAG,
                         builder.toString());
             }
             return queryString;
@@ -261,14 +263,14 @@ public abstract class BaseRequest<T extends BaseResponse> {
         public byte[] getBody() throws AuthFailureError {
 
             if (getMethod() == Request.Method.POST && body == null) {
-                throw new IllegalStateException(getResponseClass() + ": POST methods must provide a body");
+                throw new IllegalStateException(TAG + ": POST methods must provide a body");
             }
 
             if (body != null) {
 
                 String bodyStr = body.generateBody();
                 if (LOGGING) {
-                    Log.i(BaseRequest.this.getClass().getSimpleName(),
+                    Log.i(TAG,
                             "BODY: " + (bodyStr.isEmpty() ? "NONE" : bodyStr));
                 }
                 return bodyStr.getBytes();
