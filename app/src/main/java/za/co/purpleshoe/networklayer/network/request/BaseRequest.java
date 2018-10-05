@@ -133,6 +133,11 @@ public abstract class BaseRequest<T extends BaseResponse> {
      */
     private String buildUrl() {
         //print contents
+
+        if (getRequestUrl() == null) {
+            throw new NullPointerException("URL is null. Did you extend getRequestUrl() in your Request class?");
+        }
+
         StringBuilder builder = new StringBuilder(getRequestUrl());
         if (queryString.size() > 0) {
 
@@ -204,6 +209,8 @@ public abstract class BaseRequest<T extends BaseResponse> {
             } catch (JsonSyntaxException e) {
                 e.printStackTrace();
                 return Response.error(new ParseError(e));
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Response Class is null. Did you implement getResponseClass() in your Request class?");
             }
         }
 
